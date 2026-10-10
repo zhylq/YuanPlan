@@ -2,6 +2,5 @@
 *.sql text eol=lf
 
 # Portable CI and deployment configuration
-.yuanci.yml text eol=lf
 scripts/ci/Dockerfile.verify text eol=lf
 scripts/ci/*.mjs text eol=lf
