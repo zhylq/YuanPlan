@@ -4,13 +4,15 @@
 
 # YuanPlan
 
+**简体中文** · [English](README.en.md)
+
 面向个人与小型团队的自托管项目协作系统，集任务看板、项目 Wiki 与 MCP 集成于一体。
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![CI](https://github.com/zhylq/YuanPlan/actions/workflows/ci.yml/badge.svg)](https://github.com/zhylq/YuanPlan/actions/workflows/ci.yml)
 [![Node.js](https://img.shields.io/badge/Node.js-%3E%3D22.12-339933.svg)](package.json)
 
-[快速开始](#快速开始) · [Docker 部署](#docker-部署) · [MCP 集成](#mcp-集成) · [文档导航](#文档导航) · [参与贡献](#参与贡献)
+[界面预览](#界面预览) · [系统架构](#系统架构) · [快速开始](#快速开始) · [Docker 部署](#docker-部署) · [MCP 集成](#mcp-集成) · [文档导航](#文档导航) · [参与贡献](#参与贡献)
 
 YuanPlan 支持通过网页组织项目、跟踪任务与维护文档，也可通过 MCP 让 AI 客户端在项目授权范围内参与协作。业务数据存储于 PostgreSQL，附件保存在实例本地目录。
 
@@ -42,6 +44,72 @@ YuanPlan 支持通过网页组织项目、跟踪任务与维护文档，也可�
 网页和 MCP 共用业务权限与审计逻辑。写入操作使用版本检查与幂等标识，处理并发修改和请求重试。
 
 手机浏览器使用相同的网页地址。窄屏导航优先展示“我的任务”和“我的项目”，其他入口在“更多”中；项目任务默认以列表展示，也可切换到看板。手机端保持联网使用，复杂文档编辑与批量管理建议在电脑端进行。
+
+## 界面预览
+
+以下截图来自真实运行的 YuanPlan 演示实例，拍摄于 2026 年 10 月 10 日。项目、成员、任务与文档均为合成数据，不包含真实业务数据或服务器连接信息。安装后的实例从空数据库初始化，不附带这些演示内容。
+
+### 任务看板
+
+按“待办、进行中、待验收、已完成”推进工作，直接查看优先级、负责人、标签与截止日期；也可切换列表、日历与时间线。
+
+![任务看板：按状态组织工作，显示负责人、优先级和截止日期](docs/images/screenshots/task-board.png)
+
+<details>
+<summary>项目概览：查看进度、逾期与需要关注的任务</summary>
+
+概览集中展示任务状态、未完成任务的优先级、人员待办分布和需要关注的事项，支持配置并保存布局。
+
+![项目概览：任务进度、状态分布、优先级与需要关注的工作](docs/images/screenshots/project-overview.png)
+
+演示项目包含 12 个主任务、2 个子任务。概览统计当前未归档的主任务，子任务不重复计数；完成率按任务数量计算，人员待办数量不代表工时或绩效。
+
+</details>
+
+<details>
+<summary>项目 Wiki：层级文档与任务双向关联</summary>
+
+用目录组织需求、验收标准与使用说明，支持富文本、自动保存、版本记录和恢复。从文档可查看关联任务，也可从任务进入相关文档。
+
+![项目 Wiki：层级目录、富文本内容与关联任务](docs/images/screenshots/project-wiki.png)
+
+</details>
+
+<details>
+<summary>任务时间线：查看日期区间与排期</summary>
+
+从日、周刻度查看任务日期范围；未排期任务有独立入口。当前提供任务日期视图，不包含复杂依赖分析或自动资源调度。
+
+![任务时间线：按日期查看各项工作的时间区间](docs/images/screenshots/task-timeline.png)
+
+</details>
+
+<details>
+<summary>手机端：在浏览器中查看项目与任务</summary>
+
+手机与电脑使用相同地址和项目数据。窄屏优先显示“我的任务”和“我的项目”，任务默认采用列表展示。
+
+<p align="center">
+  <img src="docs/images/screenshots/mobile-tasks.png" alt="手机端项目任务列表" width="360" />
+</p>
+
+手机端保持联网使用；复杂文档编辑与批量管理建议在电脑端完成。
+
+</details>
+
+## 系统架构
+
+网页与外部 AI 客户端通过 HTTPS 访问同一个应用。REST API 与 MCP 接口共用业务服务、项目权限、版本检查、幂等处理与审计逻辑；业务数据保存到 PostgreSQL，附件单独持久化。
+
+<p align="center">
+  <img src="docs/images/architecture/yuanplan-architecture.png" alt="YuanPlan 系统架构：浏览器与外部 AI 客户端经 HTTPS 代理访问应用，共用业务权限服务，数据与附件分别持久化" width="800" />
+</p>
+
+- **网页入口**：React 静态资源与 REST API 由 Node.js / Hono 应用提供，Better Auth 处理登录与会话。
+- **MCP 入口**：通过项目范围凭据限定读写权限；直接使用 Streamable HTTP，或经可选 stdio 桥接接入。
+- **数据与运维**：PostgreSQL 保存业务数据、版本与审计，附件保存在持久化目录；运维 CLI 提供迁移、维护模式与一致备份恢复。
+
+AI 模型运行在外部客户端一侧。HTTPS 证书和反向代理由部署方配置，当前采用单实例部署。详细说明见 [MCP 接入](docs/user/mcp-clients.md)与[部署及备份](docs/deployment/docker-and-backup.md)；架构图提供 [PNG](docs/images/architecture/yuanplan-architecture.png) 和 [SVG 源文件](docs/images/architecture/yuanplan-architecture.svg)。
 
 ## 技术栈
 
