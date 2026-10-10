@@ -12,7 +12,7 @@ COPY . .
 RUN npm run build && npm prune --omit=dev
 
 # Database entrypoint only needs a UID switch; use Alpine's maintained helper.
-FROM postgres:17-alpine3.24 AS database
+FROM postgres:18-alpine3.24 AS database
 RUN apk upgrade --no-cache && apk add --no-cache su-exec \
     && sed -i 's/exec gosu postgres/exec su-exec postgres/' /usr/local/bin/docker-entrypoint.sh \
     && rm /usr/local/bin/gosu
