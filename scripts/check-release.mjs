@@ -31,10 +31,10 @@ for (const file of files) {
   if (!/\.(?:md|mjs|ts|tsx|json|yml|yaml|sh|py|sql|html|svg|txt)$/.test(file) && !/Dockerfile/.test(relative)) continue;
   const text = await fs.readFile(file, 'utf8');
   if (patterns.some(pattern => pattern.test(text))) errors.push(`${relative}: possible credential`);
-  if (relative.startsWith('deploy/automation/') && /https?:\/\//.test(text)) {
+  if (relative.startsWith('deploy/') && /https?:\/\//.test(text)) {
     for (const match of text.matchAll(/https?:\/\/(?:[a-zA-Z0-9._-]+:[a-zA-Z0-9._-]+@)?([a-zA-Z0-9.-]+)/g)) {
       const host = match[1];
-      if (!['gitee.com', '127.0.0.1', 'localhost'].includes(host) && !/(?:^|\.)(?:example\.(?:com|org|net)|example|test)$/.test(host)) errors.push(`${relative}: non-example deployment host`);
+      if (!['127.0.0.1', 'localhost'].includes(host) && !/(?:^|\.)(?:example\.(?:com|org|net)|example|test)$/.test(host)) errors.push(`${relative}: non-example deployment host`);
     }
   }
   if (relative.endsWith('.md')) {

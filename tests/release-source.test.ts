@@ -16,9 +16,9 @@ function check(directory: string) {
   return spawnSync(process.execPath, [join(directory, 'scripts/check-release.mjs')], { cwd: directory, encoding: 'utf8' });
 }
 it('accepts public templates and synthetic example deployment addresses', async () => {
-  const directory = await fixture(); await mkdir(join(directory, 'deploy/automation'), { recursive: true });
+  const directory = await fixture(); await mkdir(join(directory, 'deploy/examples'), { recursive: true });
   await writeFile(join(directory, '.env.example'), 'AUTH_SECRET=replace-with-random-value');
-  await writeFile(join(directory, 'deploy/automation/config.example.json'), '{"origin":"https://ci.example.com"}');
+  await writeFile(join(directory, 'deploy/examples/config.example.json'), '{"origin":"https://ci.example.com"}');
   expect(check(directory).status).toBe(0);
 });
 it('rejects a tracked environment file even though local environment files are skipped', async () => {
@@ -28,8 +28,8 @@ it('rejects a tracked environment file even though local environment files are s
   expect(result.stderr).not.toContain('synthetic-test-only');
 });
 it('rejects a real deployment host without echoing configuration contents', async () => {
-  const directory = await fixture(); await mkdir(join(directory, 'deploy/automation'), { recursive: true });
-  await writeFile(join(directory, 'deploy/automation/config.json'), '{"origin":"https://production.company.invalid","token":"synthetic-secret"}');
+  const directory = await fixture(); await mkdir(join(directory, 'deploy/examples'), { recursive: true });
+  await writeFile(join(directory, 'deploy/examples/config.json'), '{"origin":"https://production.company.invalid","token":"synthetic-secret"}');
   const result = check(directory); expect(result.status).toBe(1); expect(result.stderr).toContain('non-example deployment host');
   expect(result.stderr).not.toContain('synthetic-secret');
 });

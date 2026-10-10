@@ -14,7 +14,7 @@
 
 YuanPlan 支持通过网页组织项目、跟踪任务与维护文档，也可通过 MCP 让 AI 客户端在项目授权范围内参与协作。业务数据存储于 PostgreSQL，附件保存在实例本地目录。
 
-> 当前版本为 **0.1.0 / MVP**，面向个人及小型团队自托管使用。核心功能、数据库与附件恢复、构建后的服务以及 Codex MCP 运行时已有验证；完整无障碍、Claude Desktop 实际接入和更大规模负载仍待验证。开源版本默认从空数据库初始化；上线前仍应验证自己的代理、邮件与备份环境。开源整改与验证结果见[开源发布检查](docs/qa/open-source-readiness-2026-10-10.md)。
+> 当前源码发布为 **v0.1.1 / MVP**，面向个人及小型团队自托管使用。核心功能、数据库与附件恢复、构建后的服务以及 Codex MCP 运行时已有验证；完整无障碍、Claude Desktop 实际接入和更大规模负载仍待验证。v0.1.1 仅整理仓库内容，应用接口与备份格式保持 0.1.0 兼容。开源版本默认从空数据库初始化；上线前仍应验证自己的代理、邮件与备份环境。开源整改与验证结果见[开源发布检查](docs/qa/open-source-readiness-2026-10-10.md)。
 
 ## 为什么使用 YuanPlan
 
@@ -274,7 +274,7 @@ YuanPlan/
 │   ├── editor-schema/      # 编辑器结构及 Markdown 转换
 │   └── mcp-stdio/          # 桌面客户端 stdio → HTTP 桥接
 ├── docs/
-│   ├── deployment/         # 部署、恢复、维护及可选 YuanCI 自动化
+│   ├── deployment/         # 部署、恢复与维护
 │   ├── user/               # MCP 客户端接入
 │   ├── architecture/       # 架构及兼容性说明
 │   ├── qa/                 # 验收记录和发布检查
@@ -292,13 +292,10 @@ YuanPlan/
 | [账号恢复与附件维护](docs/deployment/recovery-and-files.md) | 密码恢复、维护与孤立文件清理 |
 | [MCP 客户端接入](docs/user/mcp-clients.md) | HTTP 和 stdio 配置、复现及排错 |
 | [MCP 兼容验收](docs/architecture/mcp-compatibility.md) | 已验证链路与客户端限制 |
-| [YuanCI 自动化](docs/deployment/yuanci-automation.md) | 可选的 Gitee / YuanCI 验收与发布，需要独立配置 |
 | [贡献指南](CONTRIBUTING.md) | 开发流程、测试与 Pull Request 要求 |
 | [安全反馈](SECURITY.md) | 漏洞报告方式及信息保护 |
 | [开源维护与发布](docs/deployment/open-source-release.md) | 公共仓库设置、维护与首次发布 |
 | [开源发布检查](docs/qa/open-source-readiness-2026-10-10.md) | 本次检查结论、阻塞项及发布清单 |
-
-YuanCI 自动化面向 Gitee，需要另外部署 Runner 与发布服务；它不会自动为 GitHub 仓库提供 Actions 检查。
 
 ## 常见问题
 

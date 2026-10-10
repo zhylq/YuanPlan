@@ -1,8 +1,0 @@
-FROM node:22-alpine3.24 AS node
-FROM postgres:17-alpine3.24
-COPY --from=node /usr/local/ /usr/local/
-RUN apk upgrade --no-cache && apk add --no-cache python3 git && rm /usr/local/bin/gosu
-ENV HOME=/tmp
-WORKDIR /workspace
-ENTRYPOINT []
-CMD ["node", "--version"]

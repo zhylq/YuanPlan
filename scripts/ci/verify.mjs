@@ -52,8 +52,6 @@ try {
     if (tables.rowCount) throw new Error('CI requires a fresh empty database; refusing to modify existing data');
   } finally { await client.end(); }
   // npm is invoked through Node, avoiding shell quoting and Windows npm.cmd.
-  await run('python3', ['deploy/automation/test_publisher.py']);
-  await run('bash', ['-n', 'deploy/automation/release.sh']);
   await run('pg_dump', ['--version']);
   await run('pg_restore', ['--version']);
   for (const task of ['typecheck', 'test', 'build']) {
